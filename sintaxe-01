@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node{
+    int vlr;
+    struct Node * prox;
+} node;
+
+node * insereInicio (int v,  node *p);
+void mostraLista (node * p);
+
+int main (void){
+    int op= -1, valor;
+
+    node * lista = NULL; // inicializa a lista
+while(op != 0){
+        printf("\n\n = = = = = = = \n");
+        printf("\t 1.inserir o inicio \n");
+        printf("\t 2.mostrar lista \n");
+        printf("\t >");
+        scanf("%d", &op);
+        switch (op){
+            case 1:
+                printf("\n Informe o valor: ");
+                scanf("%d", &valor);
+                lista = insereInicio(valor, lista);
+                break;
+            case 2:
+                mostraLista (lista);
+                break;
+            case 0:
+                printf("programa encerrado!");
+                break;
+            default:
+                printf("Opcao invalida!!");
+                break;
+        }
+}
+    return 0;
+}
+
+node * insereInicio (int v,  node * p){
+    node * novo = NULL;
+
+    novo = (node*) malloc (sizeof(node));
+    novo->vlr = v;
+    novo->prox = p;
+    return novo;
+
+}
+void mostraLista (node * p){
+    node * l;
+    l = p;
+    printf("\n Elementos da lista: ");
+    
+    while(l != NULL){
+     printf("%d ", l->vlr );
+     l = l->prox;
+    }
+
+}
