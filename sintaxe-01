@@ -8,6 +8,7 @@ typedef struct Node{
 
 node * insereInicio (int v,  node *p);
 void mostraLista (node * p);
+int listaVazia (node * p);
 
 int main (void){
     int op= -1, valor;
@@ -30,10 +31,10 @@ while(op != 0){
                 break;
             case 0:
                 printf("programa encerrado!");
-                break;
+                return 0;
             default:
                 printf("Opcao invalida!!");
-                break;
+                return 0;
         }
 }
     return 0;
@@ -51,11 +52,19 @@ node * insereInicio (int v,  node * p){
 void mostraLista (node * p){
     node * l;
     l = p;
-    printf("\n Elementos da lista: ");
+    if(listaVazia (p)) printf("\n a lista esta vazia");
+    else{
+        printf("\n Elementos da lista: ");
     
-    while(l != NULL){
-     printf("%d ", l->vlr );
-     l = l->prox;
+        while(l != NULL){
+            printf("%d ", l->vlr );
+            l = l->prox;
+        }
     }
+
+}
+int listaVazia (node * p){
+    if(p== NULL) return 1;
+    else return 0;
 
 }
