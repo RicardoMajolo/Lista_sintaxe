@@ -1,3 +1,15 @@
+/*1- Considerando o programa exemplo desenvolvido em aula, adapte o código para incluir as seguintes
+operações para manipulação da lista:
+1. Inserir no final da lista
+2. Buscar por valor
+3. Buscar por posição
+4. Remover do final
+5. Remover por posição
+6. Remover por valor
+7-8. Imprimir apenas elementos pares (ou ímpares)
+Importante: para cada opção selecionada, verifique a possibilidade de sua execução, informando caso
+alguma solicitação não possa ser atendida (ex: tentar excluir um elemento de uma lista vazia).
+*/
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -6,83 +18,235 @@ typedef struct Node{
     struct Node * prox;
 } node;
 
-node * insereInicio (int v,  node *p);
-void mostraLista (node * p);
-int listaVazia (node * p);
-node * removeInicio (node * p);
+node* insereInicio(int v, node* p);
+node* removeInicio(node* p);
+node* removeFinal(node* p);
+node* removePosicao(node* p, int pos); 
+node* removeValor(node* p, int v); 
+void mostraLista(node* p);
+void mostraPares(node* p); 
+void mostraImpares(node* p); 
+int listaVazia(node* p);
 
-int main (void){
-    int op= -1, valor;
+int main(void) {
+    int op = -1, valor, pos;
 
-    node * lista = NULL; // inicializa a lista
-while(op != 0){
+    node* lista = NULL; // inicializa a lista
+    while(op != 0) {
         printf("\n\n = = = = = = = \n");
-        printf("\t 1.inserir o inicio \n");
-        printf("\t 2.mostrar lista \n");
-        printf("\t 3.remover inicio\n");
-        printf("\t >");
+        printf("\t1. Inserir no início\n");
+        printf("\t2. Mostrar lista\n");
+        printf("\t3. Remover do início\n");
+        printf("\t4. Remover do final\n");
+        printf("\t5. Remover por posição\n");
+        printf("\t6. Remover por valor\n");
+        printf("\t7. Mostrar apenas elementos pares\n");
+        printf("\t8. Mostrar apenas elementos ímpares\n");
+        printf("\t0. Sair\n");
+        printf("\t> ");
         scanf("%d", &op);
-        switch (op){
+
+        switch(op) {
             case 1:
-                printf("\n Informe o valor: ");
+                printf("\nInforme o valor: ");
                 scanf("%d", &valor);
                 lista = insereInicio(valor, lista);
                 break;
             case 2:
-                mostraLista (lista);
+                mostraLista(lista);
                 break;
             case 3:
-                if (listaVazia(lista)){
-                    printf("A lista esta vazia");
-                }
-                else{
-                lista= removeInicio(lista);
+                if (listaVazia(lista)) {
+                    printf("A lista está vazia!\n");
+                } else {
+                    lista = removeInicio(lista);
                 }
                 break;
+            case 4:
+                if (listaVazia(lista)) {
+                    printf("A lista está vazia!\n");
+                } else {
+                    lista = removeFinal(lista);
+                }
+                break;
+            case 5: 
+                printf("Informe a posição para remoção: ");
+                scanf("%d", &pos);
+                if (listaVazia(lista)) {
+                    printf("A lista está vazia!\n");
+                } else {
+                    lista = removePosicao(lista, pos);
+                }
+                break;
+            case 6: 
+                printf("Informe o valor para remoção: ");
+                scanf("%d", &valor);
+                if (listaVazia(lista)) {
+                    printf("A lista está vazia!\n");
+                } else {
+                    lista = removeValor(lista, valor);
+                }
+                break;
+            case 7:
+                mostraPares(lista);
+                break;
+            case 8: 
+                mostraImpares(lista);
+                break;
             case 0:
-                printf("programa encerrado!");
+                printf("Programa encerrado!\n");
                 return 0;
             default:
-                printf("Opcao invalida!!");
-                return 0;
-        }
-}
-    return 0;
-}
-
-node * insereInicio (int v,  node * p){
-    node * novo = NULL;
-
-    novo = (node*) malloc (sizeof(node));
-    novo->vlr = v;
-    novo->prox = p;
-    return novo;
-
-}
-void mostraLista (node * p){
-    node * l;
-    l = p;
-    if(listaVazia (p)) printf("\n a lista esta vazia");
-    else{
-        printf("\n Elementos da lista: ");
-    
-        while(l != NULL){
-            printf("%d ", l->vlr );
-            l = l->prox;
+                printf("Opção inválida!\n");
         }
     }
 
+    return 0;
 }
-int listaVazia (node * p){
-    if(p== NULL) return 1;
-    else return 0;
 
+node* insereInicio(int v, node* p) {
+    node* novo = (node*)malloc(sizeof(node));
+    novo->vlr = v;
+    novo->prox = p;
+    return novo;
 }
-node * removeInicio (node * p){
-    node * l;
-    l = p->prox;
-    free (p);
-    printf("Elemnto removido com sucesso!");
+
+void mostraLista(node* p) {
+    node* l = p;
+    if (listaVazia(p)) 
+        printf("\nA lista está vazia\n");
+    else {
+        printf("\nElementos da lista: ");
+        while(l != NULL) {
+            printf("%d ", l->vlr);
+            l = l->prox;
+        }
+        printf("\n");
+    }
+}
+
+int listaVazia(node* p) {
+    return p == NULL;
+}
+
+node* removeInicio(node* p) {
+    if(p == NULL) {
+        printf("A lista está vazia!\n");
+        return NULL;
+    }
+    node* l = p->prox;
+    free(p);
+    printf("Elemento removido com sucesso!\n");
     return l;
-
 }
+
+node* removeFinal(node* p) {
+    if (p == NULL) {
+        printf("A lista está vazia!\n");
+        return NULL;
+    }
+   
+    if (p->prox == NULL) {
+        free(p);
+        printf("Elemento removido com sucesso!\n");
+        return NULL;
+    }
+    
+    node* l = p;
+    while (l->prox != NULL && l->prox->prox != NULL) {
+        l = l->prox;
+    }
+    free(l->prox);
+    l->prox = NULL;
+    printf("Elemento removido com sucesso!\n");
+    return p;
+}
+
+node* removePosicao(node* p, int pos) {
+    if (p == NULL) {
+        printf("A lista está vazia!\n");
+        return NULL;
+    }
+
+    if (pos == 1) {
+        return removeInicio(p);
+    }
+
+    node* l = p;
+    int i = 1;
+    
+    while (l != NULL && i < pos - 1) {
+        l = l->prox;
+        i++;
+    }
+
+    if (l == NULL || l->prox == NULL) {
+        printf("Posição inválida!\n");
+        return p;
+    }
+
+    node* temp = l->prox;
+    l->prox = l->prox->prox;
+    free(temp);
+
+    printf("Elemento da posição %d removido com sucesso!\n", pos);
+    return p;
+}
+
+node* removeValor(node* p, int v) {
+    if (p == NULL) {
+        printf("A lista está vazia!\n");
+        return NULL;
+    }
+
+    if (p->vlr == v) {
+        node* temp = p;
+        p = p->prox;
+        free(temp);
+        printf("Elemento %d removido com sucesso!\n", v);
+        return p;
+    }
+
+    node* l = p;
+    while (l->prox != NULL && l->prox->vlr != v) {
+        l = l->prox;
+    }
+
+
+    if (l->prox == NULL) {
+        printf("Valor %d não encontrado!\n", v);
+        return p;
+    }
+
+    node* temp = l->prox;
+    l->prox = l->prox->prox;
+    free(temp);
+
+    printf("Elemento %d removido com sucesso!\n", v);
+    return p;
+}
+
+void mostraPares(node* p) {
+    node* l = p;
+    printf("\nElementos pares: ");
+    while (l != NULL) {
+        if (l->vlr % 2 == 0) {
+            printf("%d ", l->vlr);
+        }
+        l = l->prox;
+    }
+    printf("\n");
+}
+
+void mostraImpares(node* p) {
+    node* l = p;
+    printf("\nElementos ímpares: ");
+    while (l != NULL) {
+        if (l->vlr % 2 != 0) {
+            printf("%d ", l->vlr);
+        }
+        l = l->prox;
+    }
+    printf("\n");
+}
+
